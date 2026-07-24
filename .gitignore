@@ -1,0 +1,24 @@
+# Environment & Secrets
+.env
+.env.local
+*.pem
+*.key
+
+# Large Data & Executable Files
+*.db
+*.sqlite3
+*.csv
+*.exe
+*.log
+cloudflared.exe
+PUBLIC_URL.txt
+
+# Caches & Dependencies
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+
+# OS Specific
+.DS_Store
+Thumbs.db

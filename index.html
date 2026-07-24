@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전영재 전용 주식종목 찾기 | 네이버 증권 기반 🇰🇷국내 & 🇺🇸미국 저평가 큐레이션</title>
+    <!-- KakaoTalk & Mobile Open Graph Preview Card Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="📈 전영재 전용 주식종목 찾기 (실시간 시세 연동)">
+    <meta property="og:description" content="🇰🇷국내 & 🇺🇸미국 저평가 93개 대표 주식 큐레이션 · S-RIM 적정주가 실시간 분석">
+    <meta property="og:image" content="https://img1.daumcdn.net/thumb/R1280x0/?fname=https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F2422%2F2422774.png">
+    
+    <!-- Mobile App & PWA Settings for Smartphone Home Screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="전영재주식">
+    <meta name="theme-color" content="#090c10">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Header Navigation -->
+        <header class="main-header">
+            <div class="header-top-row">
+                <div class="header-left">
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <div class="logo-text">
+                            <h1>전영재 전용 <span class="badge-kr">주식종목 찾기</span></h1>
+                            <p class="subtitle">전영재 전용 큐레이션 · 네이버 증권 🇰🇷국내 & 🇺🇸미국 저평가 장기투자 스크리너</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-stats">
+                    <div class="stat-pill">
+                        <i class="fa-solid fa-gem"></i>
+                        <div>
+                            <span class="stat-value" id="totalStocksCount">0</span>
+                            <span class="stat-label">전영재 발굴 종목</span>
+                        </div>
+                    </div>
+                    <div class="stat-pill highlight-gold">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                        <div>
+                            <span class="stat-value" id="avgUpsideDisplay">+43.2%</span>
+                            <span class="stat-label">평균 적정주가 상승여력</span>
+                        </div>
+                    </div>
+                    <div class="stat-pill highlight-green">
+                        <i class="fa-solid fa-sack-dollar"></i>
+                        <div>
+                            <span class="stat-value" id="avgDivDisplay">4.6%</span>
+                            <span class="stat-label">평균 배당수익률</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn btn-nasdaq" id="btnPresetNasdaq">
+                    <i class="fa-solid fa-rocket"></i> 전영재 나스닥 50선 🚀
+                </button>
+                <button class="btn btn-primary" id="btnPresetYeongjae">
+                    <i class="fa-solid fa-heart"></i> 전영재 추천 픽 💖
+                </button>
+                <button class="btn btn-calc" id="btnOpenCalculator">
+                    <i class="fa-solid fa-calculator"></i> 적정주가 계산기 🧮
+                </button>
+                <button class="btn btn-scan" id="btnOpenScraper">
+                    <i class="fa-solid fa-rotate"></i> 네이버 증권 동기화 🔄
+                </button>
+                <button class="btn btn-kakao" id="btnShareKakao">
+                    <i class="fa-solid fa-comment"></i> 카카오톡 공유 💬
+                </button>
+                <button class="btn btn-secondary" id="btnOpenSaved">
+                    <i class="fa-solid fa-star"></i> 관심종목 (<span id="savedCount">0</span>)
+                </button>
+                <button class="btn btn-outline" id="btnExportCsv">
+                    <i class="fa-solid fa-file-csv"></i> CSV 다운로드
+                </button>
+            </div>
+        </header>
+
+        <!-- Market Index Overview Ribbon -->
+        <section class="market-ribbon">
+            <div class="ribbon-card">
+                <span class="r-country">🇰🇷 KOSPI</span>
+                <strong class="r-val">2,750.40</strong>
+                <span class="r-tag pbr">PBR 0.92배 (저평가)</span>
+            </div>
+            <div class="ribbon-card">
+                <span class="r-country">🇰🇷 KOSDAQ</span>
+                <strong class="r-val">815.20</strong>
+                <span class="r-tag per">PER 18.5배</span>
+            </div>
+            <div class="ribbon-card">
+                <span class="r-country">🇺🇸 S&P 500</span>
+                <strong class="r-val">5,560.10</strong>
+                <span class="r-tag per">PER 22.4배</span>
+            </div>
+            <div class="ribbon-card">
+                <span class="r-country">🇺🇸 NASDAQ</span>
+                <strong class="r-val">17,980.50</strong>
+                <span class="r-tag per">PER 26.8배</span>
+            </div>
+        </section>
+
+        <!-- Main Content Layout -->
+        <main class="main-layout">
+            <!-- Filter & Search Controls Sidebar/Panel -->
+            <aside class="filter-panel">
+                <div class="filter-header">
+                    <h2><i class="fa-solid fa-sliders"></i> 전영재 맞춤 스크리너 필터</h2>
+                    <button class="btn-text" id="btnResetFilters"><i class="fa-solid fa-rotate-left"></i> 초기화</button>
+                </div>
+
+                <!-- Market Selection Tabs -->
+                <div class="filter-group">
+                    <label><i class="fa-solid fa-globe"></i> 시장선택 (Market)</label>
+                    <div class="market-pills" id="marketPills">
+                        <button class="m-pill active" data-market="all">전체 시장</button>
+                        <button class="m-pill" data-market="NASDAQ">🇺🇸 나스닥 50선 🚀</button>
+                        <button class="m-pill" data-market="US">🇺🇸 미국 전체</button>
+                        <button class="m-pill" data-market="KR">🇰🇷 국내주식</button>
+                    </div>
+                </div>
+
+                <!-- Search Input -->
+                <div class="filter-group">
+                    <label for="searchInput"><i class="fa-solid fa-magnifying-glass"></i> 종목명 / 티커 / 키워드</label>
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="예: 현대차, 005380, GOOGL, #밸류업...">
+                    </div>
+                </div>
+
+                <!-- Investment Vibe / Strategy Quick Tag Filters -->
+                <div class="filter-group">
+                    <label><i class="fa-solid fa-tags"></i> 전영재 선호 테마 태그</label>
+                    <div class="tag-pills" id="tagPills">
+                        <button class="t-pill active" data-tag="all">전체 보기</button>
+                        <button class="t-pill" data-tag="PBR">💎 초저PBR (< 0.7)</button>
+                        <button class="t-pill" data-tag="ROE">🚀 고ROE 가치성장주</button>
+                        <button class="t-pill" data-tag="DIV">💰 고배당 밸류업</button>
+                        <button class="t-pill" data-tag="PER">📉 저PER (수익저평가)</button>
+                    </div>
+                </div>
+
+                <!-- Valuation Sliders -->
+                <!-- PBR Slider -->
+                <div class="filter-group">
+                    <div class="label-with-val">
+                        <label><i class="fa-solid fa-scale-balanced"></i> 최대 PBR (주가자산비율)</label>
+                        <span class="range-val-display" id="maxPbrDisplay">15.00 배 이하</span>
+                    </div>
+                    <input type="range" class="custom-range" id="maxPbrRange" min="0.20" max="30.00" step="0.5" value="15.00">
+                    <p class="range-hint">* PBR < 1.0배는 기업 청산가치(BPS)보다 주가가 싼 상태입니다.</p>
+                </div>
+
+                <!-- PER Slider -->
+                <div class="filter-group">
+                    <div class="label-with-val">
+                        <label><i class="fa-solid fa-coins"></i> 최대 PER (주가수익비율)</label>
+                        <span class="range-val-display" id="maxPerDisplay">60.0 배 이하</span>
+                    </div>
+                    <input type="range" class="custom-range" id="maxPerRange" min="3.0" max="80.0" step="1.0" value="60.0">
+                </div>
+
+                <!-- ROE Slider -->
+                <div class="filter-group">
+                    <div class="label-with-val">
+                        <label><i class="fa-solid fa-bolt"></i> 최소 ROE (자기자본이익률)</label>
+                        <span class="range-val-display" id="minRoeDisplay">8.0% 이상</span>
+                    </div>
+                    <input type="range" class="custom-range" id="minRoeRange" min="0.0" max="30.0" step="1.0" value="8.0">
+                    <p class="range-hint">* 전영재 가치투자 원칙: ROE 10%+ 우량 기업 우대</p>
+                </div>
+
+                <!-- Dividend Yield Slider -->
+                <div class="filter-group">
+                    <div class="label-with-val">
+                        <label><i class="fa-solid fa-hand-holding-dollar"></i> 최소 배당수익률</label>
+                        <span class="range-val-display" id="minDivDisplay">0.0% 이상</span>
+                    </div>
+                    <input type="range" class="custom-range" id="minDivRange" min="0.0" max="8.0" step="0.5" value="0.0">
+                </div>
+            </aside>
+
+            <!-- Stocks Content Panel -->
+            <section class="content-panel">
+                <!-- Bar for sorting & counts -->
+                <div class="control-bar">
+                    <div class="results-info">
+                        <span class="results-count">전영재 픽 종목 <strong id="visibleCount">0</strong>개</span>
+                        <span class="active-filter-tag" id="activeFilterSummary">전체 시장 · 저평가 필터 적용 중</span>
+                    </div>
+
+                    <div class="sort-controls">
+                        <label for="sortSelect"><i class="fa-solid fa-arrow-down-short-wide"></i> 정렬 기준:</label>
+                        <select id="sortSelect" class="custom-select">
+                            <option value="score_desc">⚡ 전영재 가치점수 높은순</option>
+                            <option value="upside_desc">📈 적정주가 상승여력 높은순</option>
+                            <option value="pbr_asc">📉 PBR 낮은순 (자산저평가)</option>
+                            <option value="per_asc">📉 PER 낮은순 (수익저평가)</option>
+                            <option value="div_desc">💰 배당수익률 높은순</option>
+                            <option value="roe_desc">💎 ROE 높은순 (고수익성)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Grid of Stock Cards -->
+                <div class="stock-grid" id="stockGrid">
+                    <!-- Cards dynamically rendered here -->
+                </div>
+
+                <!-- Empty State (Hidden by default) -->
+                <div class="empty-state hidden" id="emptyState">
+                    <i class="fa-solid fa-chart-pie empty-icon"></i>
+                    <h3>조건에 일치하는 저평가 종목이 없습니다.</h3>
+                    <p>PBR, PER 상한을 올리거나 ROE 조건을 완화해 보세요.</p>
+                    <button class="btn btn-primary" id="btnResetFiltersEmpty">필터 초기화</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal 1: Stock Detail & Valuation Analysis Modal -->
+    <div class="modal-backdrop hidden" id="modalDetail">
+        <div class="modal-content modal-lg">
+            <button class="modal-close" id="btnCloseDetail"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="stock-detail-header" id="detailHeader">
+                <!-- Dynamic detail header -->
+            </div>
+
+            <div class="stock-detail-body">
+                <!-- Quick KPI Grid -->
+                <div class="kpi-grid" id="detailKpis">
+                    <!-- Dynamic KPIs -->
+                </div>
+
+                <!-- Tabs -->
+                <div class="detail-tabs">
+                    <button class="tab-btn active" data-tab="tabValuation"><i class="fa-solid fa-chart-line"></i> 가치평가 & 적정주가 분석</button>
+                    <button class="tab-btn" data-tab="tabFinancials"><i class="fa-solid fa-table"></i> 재무 추이 & ROE 분석</button>
+                    <button class="tab-btn" data-tab="tabRationale"><i class="fa-solid fa-shield-halved"></i> 전영재 투자 핵심 포인트 & 리스크</button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="tab-content active" id="tabValuation">
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <h4><i class="fa-solid fa-scale-unbalanced"></i> PER / PBR 밸류에이션 밴드 추이</h4>
+                            <div class="chart-wrapper">
+                                <canvas id="chartValuationBand"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h4><i class="fa-solid fa-pie-chart"></i> 주주환원율 (배당 + 자사주소각)</h4>
+                            <div class="chart-wrapper">
+                                <canvas id="chartShareholderReturn"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" id="tabFinancials">
+                    <div class="financials-box" id="detailFinancialsBox">
+                        <!-- Dynamic financials table -->
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" id="tabRationale">
+                    <div class="rationale-grid" id="detailRationaleGrid">
+                        <!-- Dynamic pros and risks -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-calc" id="btnDetailCalc">
+                    <i class="fa-solid fa-calculator"></i> 이 종목 S-RIM 계산기 🧮
+                </button>
+                <button class="btn btn-secondary" id="btnDetailSave">
+                    <i class="fa-solid fa-star"></i> 관심종목 저장
+                </button>
+                <a class="btn btn-naver" id="btnDetailNaverUrl" target="_blank" rel="noopener noreferrer">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> 네이버 증권 ↗
+                </a>
+                <a class="btn btn-yahoo" id="btnDetailYahooUrl" target="_blank" rel="noopener noreferrer" style="display:none;">
+                    <i class="fa-solid fa-globe"></i> 야후 파이낸스 ($) ↗
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: RIM / DCF Fair Value Calculator Modal -->
+    <div class="modal-backdrop hidden" id="modalCalculator">
+        <div class="modal-content modal-md">
+            <button class="modal-close" id="btnCloseCalculator"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-calculator"></i> 잔여이익모델 (S-RIM) 적정주가 계산기</h2>
+                <p class="modal-sub">사경인 회계사의 S-RIM 가치평가 공식을 적용하여 적정 가치를 산출합니다.</p>
+            </div>
+
+            <div class="calc-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label id="calcBpsLabel">현재 주당순자산 (BPS)</label>
+                        <input type="number" id="calcBps" value="396000" placeholder="예: 396000 또는 31.46">
+                    </div>
+                    <div class="form-group">
+                        <label>예상 지속 ROE (%)</label>
+                        <input type="number" id="calcRoe" value="14.2" step="0.1" placeholder="예: 14.2">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>요구수익률 (할인율, %)</label>
+                        <input type="number" id="calcDiscount" value="8.0" step="0.5" placeholder="기본: 8.0%">
+                    </div>
+                    <div class="form-group">
+                        <label id="calcPriceLabel">현재 주가 (원 / 달러)</label>
+                        <input type="number" id="calcCurrentPrice" value="245500" placeholder="예: 245500 또는 182.50">
+                    </div>
+                </div>
+
+                <div class="calc-result-box">
+                    <div class="calc-result-item">
+                        <span>S-RIM 적정 가치 (Fair Value)</span>
+                        <strong id="calcFairResult">702,900 원</strong>
+                    </div>
+                    <div class="calc-result-item highlight">
+                        <span>현재가 대비 상승 여력 (Upside)</span>
+                        <strong id="calcUpsideResult">+186.3%</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-full" id="btnRunCalc">
+                    <i class="fa-solid fa-bolt"></i> 적정주가 계산 실행하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Naver Live Scraper Animation Modal -->
+    <div class="modal-backdrop hidden" id="modalScraper">
+        <div class="modal-content modal-md text-center">
+            <button class="modal-close" id="btnCloseScraper"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="scraper-header">
+                <div class="radar-animation">
+                    <div class="radar-sweep"></div>
+                    <i class="fa-solid fa-chart-line radar-center"></i>
+                </div>
+                <h2>네이버 증권 실시간 데이터 동기화</h2>
+                <p class="modal-sub">finance.naver.com 의 실시간 시세, PER, PBR, ROE 정보를 갱신 중입니다...</p>
+            </div>
+
+            <div class="scan-progress-box">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="scanProgressFill"></div>
+                </div>
+                <div class="scan-status-text" id="scanStatusText">네트워크 핑 및 네이버 증권 API 연결 중...</div>
+            </div>
+
+            <div class="scanned-results-preview hidden" id="scannedResultsPreview">
+                <div class="success-badge"><i class="fa-solid fa-circle-check"></i> 네이버 증권 최신 밸류에이션 동기화 완료!</div>
+            </div>
+
+            <div class="modal-footer justify-center">
+                <button class="btn btn-primary hidden" id="btnCloseScraperDone">
+                    <i class="fa-solid fa-check"></i> 확인
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Saved Watchlist Drawer -->
+    <div class="drawer-backdrop hidden" id="drawerSaved">
+        <div class="drawer-content">
+            <div class="drawer-header">
+                <h2><i class="fa-solid fa-star"></i> 전영재 관심 저평가 종목 포트폴리오</h2>
+                <button class="modal-close" id="btnCloseSaved"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="drawer-stats">
+                <div class="drawer-stat-item">
+                    <span>저장 종목</span>
+                    <strong id="savedDrawerCount">0 개</strong>
+                </div>
+                <div class="drawer-stat-item">
+                    <span>평균 상승여력</span>
+                    <strong id="savedDrawerAvgUpside">+0.0%</strong>
+                </div>
+                <div class="drawer-stat-item">
+                    <span>평균 배당률</span>
+                    <strong id="savedDrawerAvgDiv">0.0%</strong>
+                </div>
+            </div>
+
+            <div class="saved-list-items" id="savedListContainer">
+                <!-- Dynamic saved list -->
+            </div>
+
+            <div class="drawer-footer">
+                <button class="btn btn-outline btn-full" id="btnClearSaved">
+                    <i class="fa-solid fa-trash"></i> 전체 삭제
+                </button>
+                <button class="btn btn-primary btn-full" id="btnExportSavedCsv">
+                    <i class="fa-solid fa-file-excel"></i> 엑셀/CSV 익스포트
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

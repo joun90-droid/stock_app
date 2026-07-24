@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "name": "yeongjae-stock-screener",
+  "routes": [
+    { "src": "/api/stocks", "dest": "/api/stocks.py" },
+    { "src": "/api/refresh-live", "dest": "/api/stocks.py" }
+  ]
+}
