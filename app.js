@@ -3594,8 +3594,21 @@ function initEventListeners() {
 
     const btnResetFilters = document.getElementById('btnResetFilters');
     const btnResetFiltersEmpty = document.getElementById('btnResetFiltersEmpty');
+    const btnToggleMobileFilter = document.getElementById('btnToggleMobileFilter');
+    const filterPanel = document.querySelector('.filter-panel');
+
     if (btnResetFilters) btnResetFilters.addEventListener('click', resetFilters);
     if (btnResetFiltersEmpty) btnResetFiltersEmpty.addEventListener('click', resetFilters);
+
+    if (btnToggleMobileFilter && filterPanel) {
+        btnToggleMobileFilter.addEventListener('click', () => {
+            filterPanel.classList.toggle('collapsed');
+            const isCollapsed = filterPanel.classList.contains('collapsed');
+            btnToggleMobileFilter.innerHTML = isCollapsed ? 
+                '<i class="fa-solid fa-chevron-down"></i> 필터 펼치기' : 
+                '<i class="fa-solid fa-chevron-up"></i> 필터 접기';
+        });
+    }
 
     const sortSelect = document.getElementById('sortSelect');
     if (sortSelect) {

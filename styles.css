@@ -1139,10 +1139,19 @@ body {
     }
 
     .filter-panel {
+        position: relative !important;
+        top: auto !important;
         width: 100%;
-        padding: 16px 12px;
-        background: rgba(15, 23, 42, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 14px 12px;
+        background: rgba(15, 23, 42, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        z-index: 1;
+    }
+
+    .filter-panel.collapsed .filter-group,
+    .filter-panel.collapsed .search-box {
+        display: none !important;
     }
 
     .filter-group label {
