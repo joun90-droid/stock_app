@@ -4367,3 +4367,17 @@ function copyShareUrlToClipboard() {
         showToast('공유 링크: ' + url);
     }
 }
+
+// 🔴 Auto Live Stock Sync Engine (20초 주기 자동 실시간 시세 수신 및 UI 자동 반영)
+setInterval(() => {
+    fetch('/api/stocks')
+        .then(res => res.json())
+        .then(data => {
+            if (Array.isArray(data) && data.length > 0) {
+                appState.stocks = data;
+                updateHeaderStats();
+                renderMainGrid();
+            }
+        })
+        .catch(err => {});
+}, 20000);
