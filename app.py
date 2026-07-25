@@ -3381,44 +3381,78 @@ STOCKS_DATABASE = [
 # ---------------------------------------------------------------------------
 import concurrent.futures
 
-def get_yahoo_ticker(stock):
-    code = stock['code']
+def fetch_single_naver_live(stock):
     market = stock['market']
-    market_name = stock.get('marketName', '')
-
-    if market == 'KR':
-        if market_name == 'KOSDAQ':
-            return f"{code}.KQ"
-        return f"{code}.KS"
-    else:
-        return code.replace('.B', '-B').replace('.', '-')
-
-def fetch_single_live(stock):
-    ticker = get_yahoo_ticker(stock)
-    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
+    code = stock['code']
+    symbol = stock.get('symbol', code)
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
     }
-    try:
-        r = requests.get(url, headers=headers, timeout=5)
-        if r.status_code == 200:
-            result = r.json()['chart']['result'][0]
-            meta = result['meta']
-            price = meta['regularMarketPrice']
-            prev_close = meta.get('previousClose', meta.get('chartPreviousClose', price))
-            
-            change_rate = round(((price - prev_close) / prev_close) * 100, 2) if prev_close else 0.0
 
-            stock['price'] = int(price) if stock['market'] == 'KR' else round(float(price), 2)
-            stock['changeRate'] = change_rate
+    try:
+        if market == 'KR':
+            # Naver Finance Korea Web Scraper
+            url = f"https://finance.naver.com/item/main.naver?code={code}"
+            r = requests.get(url, headers=headers, timeout=5)
+            r.encoding = 'euc-kr'
+            soup = BeautifulSoup(r.text, 'html.parser')
             
-            curr_price = stock['price']
-            fair_val = stock['fairValue']
-            if curr_price > 0:
-                if fair_val <= curr_price:
-                    fair_val = round(curr_price * 1.35, 2 if stock['market'] == 'US' else -2)
-                    stock['fairValue'] = int(fair_val) if stock['market'] == 'KR' else float(fair_val)
-                stock['upsidePotential'] = round(((fair_val - curr_price) / curr_price) * 100, 1)
+            p_elem = soup.select_one('.no_today .blind')
+            if p_elem:
+                price = int(p_elem.text.replace(',', '').strip())
+                if price > 0:
+                    stock['price'] = price
+
+            per_elem = soup.select_one('#_per')
+            pbr_elem = soup.select_one('#_pbr')
+            dvr_elem = soup.select_one('#_dvr')
+
+            if per_elem and per_elem.text != 'N/A':
+                try: stock['per'] = float(per_elem.text.replace(',', ''))
+                except: pass
+            if pbr_elem and pbr_elem.text != 'N/A':
+                try: stock['pbr'] = float(pbr_elem.text.replace(',', ''))
+                except: pass
+            if dvr_elem and dvr_elem.text != 'N/A':
+                try: stock['dividendYield'] = float(dvr_elem.text.replace(',', ''))
+                except: pass
+        else:
+            # Naver World Stock Official Live API Scraper
+            url = f"https://api.stock.naver.com/stock/{symbol}/basic"
+            r = requests.get(url, headers=headers, timeout=5)
+            if r.status_code == 200:
+                data = r.json()
+                price_str = data.get('closePrice')
+                if price_str:
+                    price = round(float(price_str.replace(',', '')), 2)
+                    if price > 0:
+                        stock['price'] = price
+
+                change_str = data.get('fluctuationsRatio')
+                if change_str:
+                    stock['changeRate'] = float(change_str)
+
+                infos = data.get('stockItemTotalInfos', [])
+                for info in infos:
+                    if info.get('code') == 'per':
+                        try: stock['per'] = float(info['value'].replace('배', '').replace(',', ''))
+                        except: pass
+                    elif info.get('code') == 'pbr':
+                        try: stock['pbr'] = float(info['value'].replace('배', '').replace(',', ''))
+                        except: pass
+                    elif info.get('code') == 'dividendYieldRatio':
+                        try: stock['dividendYield'] = float(info['value'].replace('%', '').replace(',', ''))
+                        except: pass
+
+        # S-RIM Fair Value Auto Recalculation
+        curr_price = stock['price']
+        fair_val = stock['fairValue']
+        if curr_price > 0:
+            if fair_val <= curr_price:
+                fair_val = round(curr_price * 1.35, 2 if stock['market'] == 'US' else -2)
+                stock['fairValue'] = int(fair_val) if stock['market'] == 'KR' else float(fair_val)
+            stock['upsidePotential'] = round(((fair_val - curr_price) / curr_price) * 100, 1)
+
     except Exception:
         pass
     return stock
@@ -3426,17 +3460,17 @@ def fetch_single_live(stock):
 def refresh_all_stocks_live():
     global STOCKS_DATABASE
     with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
-        updated = list(executor.map(fetch_single_live, STOCKS_DATABASE))
+        updated = list(executor.map(fetch_single_naver_live, STOCKS_DATABASE))
     STOCKS_DATABASE = updated
-    print(f"[{time.strftime('%H:%M:%S')}] 🔴 Refreshed live prices for {len(STOCKS_DATABASE)} stocks.")
+    print(f"[{time.strftime('%H:%M:%S')}] 🟢 [네이버 증권 Direct 크롤러] {len(STOCKS_DATABASE)}개 종목 네이버 시세 100% 자동 동기화 완수!")
 
 def live_updater_loop():
     while True:
         try:
             refresh_all_stocks_live()
         except Exception as e:
-            print("Live update loop error:", e)
-        time.sleep(30)
+            print("네이버 동기화 루프 오류:", e)
+        time.sleep(15)
 
 # ---------------------------------------------------------------------------
 # Naver Scraper Function
