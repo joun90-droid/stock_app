@@ -3515,15 +3515,15 @@ class StockAppRequestHandler(SimpleHTTPRequestHandler):
 
         return super().do_GET()
 
-def run_server(port=8080):
+def run_server(port=8080, host='0.0.0.0'):
     updater_thread = threading.Thread(target=live_updater_loop, daemon=True)
     updater_thread.start()
 
-    server_address = ('0.0.0.0', port)
+    server_address = (host, port)
     httpd = HTTPServer(server_address, StockAppRequestHandler)
     print(f"=================================================================")
-    print(f"전영재 전용 실시간 주식 큐레이션 서버 (93개 실시간 시세 동기화) 실행 중!")
-    print(f"로컬 접속: http://localhost:{port}")
+    print(f"전영재 전용 실시간 주식 큐레이션 서버 (Google Cloud Run 모드)")
+    print(f"바인딩 주소: http://{host}:{port}")
     print(f"=================================================================")
     try:
         httpd.serve_forever()
@@ -3532,7 +3532,9 @@ def run_server(port=8080):
         httpd.server_close()
 
 if __name__ == '__main__':
-    port = 8080
+    host = '0.0.0.0'
+    port_env = os.environ.get('PORT', '8080')
+    port = int(port_env) if port_env.isdigit() else 8080
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         port = int(sys.argv[1])
-    run_server(port)
+    run_server(port=port, host=host)
