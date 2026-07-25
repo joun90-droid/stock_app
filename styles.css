@@ -982,39 +982,44 @@ body {
         padding: 10px 8px;
     }
 
-    /* Sticky Mobile App Header */
+    /* Mobile App Header (Non-blocking Slim Layout) */
     .main-header {
-        position: sticky;
-        top: 0;
-        z-index: 100;
+        position: relative; /* Remove blocking sticky overlay */
+        top: auto;
+        z-index: 10;
         flex-direction: column;
         align-items: stretch;
-        gap: 12px;
-        padding: 14px 12px;
-        background: rgba(11, 15, 25, 0.94);
+        gap: 10px;
+        padding: 12px;
+        background: rgba(11, 15, 25, 0.96);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.12);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         border-radius: var(--radius-md);
-        margin-bottom: 14px;
+        margin-bottom: 12px;
     }
 
     .header-top-row {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .logo-left {
+        display: flex;
+        align-items: center;
         gap: 10px;
     }
 
     .logo-text h1 {
-        font-size: 21px;
+        font-size: 18px;
         font-weight: 800;
         color: #ffffff;
     }
     
     .logo-text .subtitle {
-        font-size: 12px;
-        color: #cbd5e1;
-        font-weight: 500;
+        display: none; /* Hide subtitle on mobile to save vertical space */
     }
 
     /* Mobile Header Stats Ribbon */
@@ -1023,52 +1028,57 @@ body {
         grid-template-columns: repeat(3, 1fr);
         gap: 6px;
         width: 100%;
+        margin-top: 4px;
     }
 
     .stat-pill {
-        padding: 8px 6px;
+        padding: 6px 4px;
         flex-direction: column;
         text-align: center;
         gap: 2px;
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
+        border-radius: 8px;
     }
 
     .stat-value {
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 800;
     }
 
     .stat-label {
-        font-size: 10px;
+        font-size: 9px;
         color: #cbd5e1;
         font-weight: 600;
     }
 
-    /* Mobile Header Quick Actions Grid */
+    /* Mobile Header Quick Actions Horizontal Touch Scroll Rail */
     .header-actions {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         gap: 8px;
         width: 100%;
-        padding-top: 10px;
+        padding-top: 8px;
+        padding-bottom: 4px;
         border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .header-actions .btn {
-        width: 100%;
-        justify-content: center;
-        padding: 12px 10px;
-        font-size: 13px;
+        flex: 0 0 auto;
+        white-space: nowrap;
+        padding: 8px 12px;
+        font-size: 12px;
         font-weight: 700;
-        border-radius: 10px;
+        border-radius: 8px;
     }
 
     .header-actions #btnPresetNasdaq {
-        grid-column: span 2;
-        font-size: 15px;
-        padding: 13px;
+        grid-column: auto;
+        font-size: 12px;
+        padding: 8px 12px;
     }
 
     /* Mobile Market Ribbon Cards */
