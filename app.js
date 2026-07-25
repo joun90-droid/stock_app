@@ -3499,6 +3499,54 @@ function initEventListeners() {
         });
     });
 
+    // Mobile Bottom Navigation Bar Events
+    const navItems = document.querySelectorAll('.mobile-bottom-nav .nav-item');
+    const setNavActive = (id) => {
+        navItems.forEach(item => item.classList.remove('active'));
+        const activeElem = document.getElementById(id);
+        if (activeElem) activeElem.classList.add('active');
+    };
+
+    const navHome = document.getElementById('navHome');
+    const navNasdaq = document.getElementById('navNasdaq');
+    const navYeongjae = document.getElementById('navYeongjae');
+    const navCalc = document.getElementById('navCalc');
+    const navSaved = document.getElementById('navSaved');
+
+    if (navHome) navHome.addEventListener('click', () => {
+        setNavActive('navHome');
+        appState.filters.market = 'all';
+        appState.filters.tag = 'all';
+        renderMainGrid();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    if (navNasdaq) navNasdaq.addEventListener('click', () => {
+        setNavActive('navNasdaq');
+        appState.filters.market = 'NASDAQ';
+        renderMainGrid();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    if (navYeongjae) navYeongjae.addEventListener('click', () => {
+        setNavActive('navYeongjae');
+        appState.filters.market = 'all';
+        appState.sortBy = 'score_desc';
+        renderMainGrid();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    if (navCalc) navCalc.addEventListener('click', () => {
+        setNavActive('navCalc');
+        document.getElementById('modalCalculator').classList.remove('hidden');
+        runSRimCalculator();
+    });
+
+    if (navSaved) navSaved.addEventListener('click', () => {
+        setNavActive('navSaved');
+        openSavedDrawer();
+    });
+
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
@@ -3822,7 +3870,9 @@ function updateHeaderStats() {
 
 function updateSavedCount() {
     const savedCountElem = document.getElementById('savedCount');
+    const mobileSavedCountElem = document.getElementById('mobileSavedCount');
     if (savedCountElem) savedCountElem.textContent = appState.savedIds.length;
+    if (mobileSavedCountElem) mobileSavedCountElem.textContent = appState.savedIds.length;
 }
 
 function toggleSaveStock(id) {
