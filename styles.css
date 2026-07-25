@@ -382,30 +382,65 @@ body {
 }
 
 /* Market Pills */
-.market-pills, .tag-pills {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
+.market-pills {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    width: 100%;
 }
 
-.m-pill, .t-pill {
-    flex: 1;
-    padding: 8px;
+.m-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 12px;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     color: var(--text-muted);
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
     cursor: pointer;
     text-align: center;
     transition: var(--transition);
+    white-space: nowrap;
+}
+
+/* Tag Pills (전영재 선호 테마 태그 픽셀 일직선 정렬) */
+.tag-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}
+
+.t-pill {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    color: var(--text-main);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    transition: var(--transition);
+    white-space: nowrap;
+    line-height: 1;
 }
 
 .m-pill.active, .t-pill.active {
     background: var(--primary-gradient);
     color: white;
     border-color: transparent;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 /* Search Box */
