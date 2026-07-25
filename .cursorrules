@@ -1,0 +1,6 @@
+# .cursorrules - Stock App Design & Layout Guidelines
+
+# UI/UX Layout Rule
+- 모든 UI 작업 시 PC 웹 화면은 넓은 카드형 레이아웃 (Multi-column Dashboard Grid), 모바일 접속 시에는 1열 자동 조정 반응형 레이아웃 (1-Column Mobile Touch Layout)을 기본으로 적용할 것.
+- 스마트폰 모바일 화면 (max-width: 768px) 접속 시 헤더 및 컨트롤 요소가 주식 종목 카드를 덮지 않도록 슬림형 구조 및 가로 스크롤 레일/하단 탭 바를 유지할 것.
+- 네이버 증권 🇰🇷국내 및 🇺🇸미국 주식의 모바일/PC 연동 URL 및 실시간 시세 데이터베이스를 100% 최신으로 무한 자동 동기화할 것.
