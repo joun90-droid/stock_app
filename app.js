@@ -3988,7 +3988,12 @@ function openDetailModal(id) {
 
     if (financialsBox) {
         financialsBox.innerHTML = `
+            <div class="table-scroll">
             <table class="financial-table">
+                <colgroup>
+                    <col class="col-metric">
+                    <col><col><col><col>
+                </colgroup>
                 <thead>
                     <tr>
                         <th>지표 (Metric)</th>
@@ -4029,6 +4034,7 @@ function openDetailModal(id) {
                     </tr>
                 </tbody>
             </table>
+            </div>
         `;
     }
 

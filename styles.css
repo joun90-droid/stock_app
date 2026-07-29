@@ -867,20 +867,51 @@ body {
     position: relative;
 }
 
+/* Horizontal-scroll wrapper keeps every column perfectly aligned row-to-row
+   even on narrow phones, instead of letting cells wrap and drift out of line. */
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+}
+
 .financial-table {
     width: 100%;
+    min-width: 460px;
     border-collapse: collapse;
+    table-layout: fixed;
     font-size: 13px;
 }
+.financial-table col.col-metric { width: 34%; }
 .financial-table th, .financial-table td {
     padding: 10px 12px;
     text-align: center;
     border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.financial-table th:first-child, .financial-table td:first-child {
+    text-align: left;
+    white-space: normal;
 }
 .financial-table th {
     background: rgba(255, 255, 255, 0.04);
     color: var(--text-muted);
     font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+
+@media (max-width: 768px) {
+    .financial-table {
+        min-width: 420px;
+        font-size: 12px;
+    }
+    .financial-table th, .financial-table td {
+        padding: 8px 8px;
+    }
 }
 
 .rationale-grid {
